@@ -37,7 +37,7 @@ Use `.*` in any position as a wildcard to match patterns. Wrap the argument in s
 ### Examples
 
 ```zsh
-$ gmd -cn '.*user.*'
+$ gmd -c -n '.*user.*'
 
 UserBench
 LinkUserGroup
