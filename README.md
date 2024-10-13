@@ -17,15 +17,15 @@ gmd [OPTIONS] [--] 'arg'
 ```
 
 Options:
-- `-h`, `--help`: Show this help message
-- `-f`, `--file`: Display the file and line number of the match
-- `-n`, `--name`: Display only the name of the matched object (class/method)
+- `-h`, `--help`: Show help message
+- `-p`, `--path`: Display the file and line number of the match
+- `-n`, `--name`: Display only the name of the matched object (class/function)
 - `-c`, `--class`: Search for class definitions only (cannot be used with `-m`)
-- `-m`, `--method`: Search for method definitions only (cannot be used with `-c`)
+- `-f`, `--function`: Search for function definitions only (cannot be used with `-c`)
 - `-s`, `--sensitive`: Make the search case-sensitive
 
 Positional Arguments:
-- `arg`: The class or method name to search for
+- `arg`: The class or function name to search for
 
 <br>
 Default search is case-insensitive.
