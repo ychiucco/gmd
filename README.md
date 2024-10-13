@@ -1,6 +1,6 @@
 # gmd
 
-`gmd` (Give Me Definition) is a shell utility that allows you to quickly find and retrieve details about class and function definitions in a Python project tracked by `git`.
+`gmd` (**Give Me Definition**) is a shell utility that allows you to quickly find and retrieve details about class and function definitions in a Python project tracked by `git`.
 
 Right now the code is tested on `zsh` only.
 
