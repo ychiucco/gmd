@@ -7,7 +7,7 @@ Right now the code is tested on `zsh` only.
 ### Installation
 
 ```zsh
-echo "" >> ~/.zshrc && curl -s https://raw.githubusercontent.com/ychiucco/gmd/refs/heads/main/gmd.zsh >> ~/.zshrc
+echo "\n" >> ~/.zshrc && curl -s https://raw.githubusercontent.com/ychiucco/gmd/refs/heads/main/gmd.zsh >> ~/.zshrc
 ```
 
 ### Usage
