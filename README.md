@@ -20,7 +20,7 @@ Options:
 - `-h`, `--help`: Show help message
 - `-p`, `--path`: Display the file and line number of the match
 - `-n`, `--name`: Display only the name of the matched object (class/function)
-- `-c`, `--class`: Search for class definitions only (cannot be used with `-m`)
+- `-c`, `--class`: Search for class definitions only (cannot be used with `-f`)
 - `-f`, `--function`: Search for function definitions only (cannot be used with `-c`)
 - `-s`, `--sensitive`: Make the search case-sensitive
 
