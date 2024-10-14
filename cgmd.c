@@ -1,5 +1,44 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
+void print_element(int pflag, int nflag, const char *buffer) {
+    char path[256];
+    char line_number_str[50];
+    int line_number = 0;
+    char object_name[256];
+    
+    char *start_ptr = strdup(buffer);
+    
+    char *ptr = strchr(start_ptr, ':'); 
+    *ptr = '\0';
+    strcpy(path, start_ptr);
+    
+    start_ptr = ptr + 1;
+    ptr = strchr(start_ptr, ':'); 
+    *ptr = '\0';
+    strcpy(line_number_str, start_ptr);
+    line_number = atoi(line_number_str);
+
+    start_ptr = ptr + 1;
+    ptr = strchr(start_ptr, ' ');
+    start_ptr = ptr + 1;
+    ptr = strchr(start_ptr, '(');
+    *ptr = '\0';
+    strcpy(object_name, start_ptr);
+    // problems with 'async def'.
+    // e.g. `cgmd.o '.*' -n`.
+
+    if (pflag && nflag) {
+        printf("%s:%d %s\n", path, line_number, object_name);
+    } else if (pflag) {
+        printf("%s:%d\n", path, line_number);
+    } else if (nflag) {
+        printf("%s\n", object_name);
+    } else {
+
+    }
+}
 
 int main(int argc, char **argv) {
     int cflag = 0;
@@ -41,8 +80,68 @@ int main(int argc, char **argv) {
         }
     }
     
-    printf("-c: %d\n-f: %d\n-s: %d\n-p: %d\n-n: %d\narg: %s\n",
-       cflag, fflag, sflag, pflag, nflag, search_pattern ? search_pattern : "NULL");
+    if (cflag && fflag) {
+        fprintf(
+            stderr,
+            "ERROR: Cannot use both -c and -f options at the same time.\n"
+        );
+        return 1;
+    }
+
+    // -s flag
+    char sensitive[4] = "";
+    if (!sflag) {
+        strcpy(sensitive, "-i "); 
+    }
+    // -c and -f flags
+    char query[256];
+    if (cflag) {
+        snprintf(query, sizeof(query), "\"class %s(\"", search_pattern);
+    } else if (fflag) {
+        snprintf(query, sizeof(query), "\"def %s(\"", search_pattern);
+    } else {
+        snprintf(
+            query,
+            sizeof(query),
+            " -e \"def %s(\" --or -e \"class %s(\"",
+            search_pattern,
+            search_pattern
+        );
+    }
+
+    char command[1024];
+    snprintf(
+        command,
+        sizeof(command),
+        "git grep -n %s%s -- '*.py'",
+        sensitive,
+        query
+    );
+
+    // ----------------------------------
+
+    
+    FILE *fp = popen(command, "r");
+    
+    if (fp == NULL) {
+        perror("popen failed");
+        return 1;
+    }
+    
+    // Buffer to hold each line of output
+    char buffer[1024];
+    // Read output a line at a time
+    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+        // Process the output line (for now, just print it)
+        print_element(pflag, nflag, buffer);
+    }
+    
+    // Close the process
+    if (pclose(fp) == -1) {
+        perror("pclose failed");
+        return 1;
+    }
+
 
     return 0;
 }
