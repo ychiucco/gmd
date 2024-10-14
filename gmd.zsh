@@ -127,9 +127,7 @@ gmd() {
           if [[ -z "${CURRENT_CONTENT// }" ]]; then
               LINE_NUMBER=$((LINE_NUMBER + 1))
               continue
-          fi
-
-          if [[ "$CURRENT_CONTENT" =~ ^"${INDENTATION} " ]] || \
+          elif [[ "$CURRENT_CONTENT" =~ ^"${INDENTATION} " ]] || \
             [[ "$CURRENT_CONTENT" =~ ^"${INDENTATION}):" ]]; then
               LINE_NUMBER=$((LINE_NUMBER + 1))
           else
