@@ -81,7 +81,7 @@ class UserBench(BaseModel):
 ---
 Next features:
 
-- `-o` flag to open files with VSCode.
+- `-o`, `--open` flag to open files with VSCode.
 
 - Highlight `class`, `def` and `async def` when printing.
 
@@ -89,4 +89,8 @@ Next features:
 
 - Write prerequisites.
 
-- Prevent edge cases: e.g. `print("def class foo")`
+- Prevent edge cases: e.g. `print("def class foo(")`
+
+- Test
+
+- Transform this section into issues
