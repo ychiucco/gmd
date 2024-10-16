@@ -71,7 +71,55 @@ void print_element(int pflag, int nflag, const char *buffer) {
     } else if (nflag) {
         printf("%s%s\n", CATEGORY, NAME);
     } else {
-        printf("%d %s %s\n", INDENTATION, CATEGORY, NAME);
+        printf("%s:%d %s %s-------------------\n", PATH, LINE, CATEGORY, NAME);
+        // open file at PATH
+        FILE* file = fopen(PATH, "r");
+        if (file == NULL) {
+            perror("Error opening file");
+            exit(1);
+        }
+
+        // we want INDENTATION+1 white spaces (+1 for '\0')
+        int INDENT = INDENTATION + 1;
+        char required_spaces[INDENT + 1];
+        memset(required_spaces, ' ', INDENT);
+        required_spaces[INDENT] = '\0';
+
+        //  read file line by line
+        int current_line = 1;
+        char line[1024];
+        while (fgets(line, sizeof(line), file)) {
+            if (current_line < LINE) {
+                ;
+            }
+            else if (current_line == LINE) {
+                printf("%s", line);
+            }
+            else {
+                if (strncmp(line, required_spaces, INDENT) == 0) {
+                    printf("%s", line);
+                } else {
+                    ptr = line;
+                    while (isspace(*ptr)) {
+                        ptr++;
+                    }
+                    if (*ptr == '\0') {
+                        // do not print empty lines
+                        ;
+                    }
+                    else if (strncmp(ptr, "):", 2) == 0) {
+                        printf("%s", line);
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            current_line++;
+        }
+
+        // Close the file
+        fclose(file);
     }
 }
 
