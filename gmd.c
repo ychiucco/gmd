@@ -23,7 +23,7 @@ void print_element(int pflag, int nflag, const char *buffer) {
     int LINE = atoi(LINE_str);
     start_ptr = ptr + 1;
 
-    // start_ptr -> "{INDENTATION}[def/async def/class]{M whitespaces}NAME(..."
+    // start_ptr -> "{INDENTATION}[def/async def/class]{spaces}NAME(..."
     // extract INDENTATION
     int INDENTATION = 0;
     while (isspace(*start_ptr)) {
@@ -31,8 +31,8 @@ void print_element(int pflag, int nflag, const char *buffer) {
         start_ptr++;
     }
 
-    // start_ptr -> "[def/async def/class]{M whitespaces}NAME(..."
-    // extract [def/async def/class], i.e. category
+    // start_ptr -> "[def/async def/class]{spaces}NAME(..."
+    // extract [def/async def/class], i.e. CATEGORY
     char CATEGORY[10];
     const char* def_str = "def";
     const char* async_def_str = "async def";
@@ -51,8 +51,8 @@ void print_element(int pflag, int nflag, const char *buffer) {
         return;
     }
 
-    // start_ptr -> "{M whitespaces}NAME(..."
-    // ignore M
+    // start_ptr -> "{spaces}NAME(..."
+    // ignore spaces
     while (isspace(*start_ptr)) {
         start_ptr++;
     }
