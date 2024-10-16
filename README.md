@@ -77,23 +77,3 @@ class UserBench(BaseModel):
     password: str
     token: Optional[str]
 ```
-
----
-
-Next features:
-
-- `-o`, `--open` flag to open files with VSCode.
-
-- Highlight `class`, `def` and `async def` when printing.
-
-- Allow multiple args.
-
-- Write prerequisites.
-
-- Prevent edge cases: e.g. `print("def class foo(")`
-
-- Test
-
-- Transform this section into issues
-
-- **Use C language**
