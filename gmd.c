@@ -1,42 +1,77 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 void print_element(int pflag, int nflag, const char *buffer) {
-    char path[256];
-    char line_number_str[50];
-    int line_number = 0;
-    char object_name[256];
-    
+
     char *start_ptr = strdup(buffer);
-    
+    // start_ptr -> "PATH:LINE:{INDENTATION}[def/async def/class]{spaces}NAME(..."
+    // extract PATH
+    char PATH[256];
     char *ptr = strchr(start_ptr, ':'); 
     *ptr = '\0';
-    strcpy(path, start_ptr);
-    
+    strcpy(PATH, start_ptr);
     start_ptr = ptr + 1;
+
+    // start_ptr -> "LINE:{INDENTATION}[def/async def/class]{spaces}NAME(..."
+    // extract LINE
+    char LINE_str[50];
     ptr = strchr(start_ptr, ':'); 
     *ptr = '\0';
-    strcpy(line_number_str, start_ptr);
-    line_number = atoi(line_number_str);
+    strcpy(LINE_str, start_ptr);
+    int LINE = atoi(LINE_str);
+    start_ptr = ptr + 1;
 
-    start_ptr = ptr + 1;
-    ptr = strchr(start_ptr, ' ');
-    start_ptr = ptr + 1;
+    // start_ptr -> "{INDENTATION}[def/async def/class]{M whitespaces}NAME(..."
+    // extract INDENTATION
+    int INDENTATION = 0;
+    while (isspace(*start_ptr)) {
+        INDENTATION++;
+        start_ptr++;
+    }
+
+    // start_ptr -> "[def/async def/class]{M whitespaces}NAME(..."
+    // extract [def/async def/class], i.e. category
+    char CATEGORY[10];
+    const char* def_str = "def";
+    const char* async_def_str = "async def";
+    const char* class_str = "class";
+    if (strncmp(start_ptr, async_def_str, strlen(async_def_str)) == 0) {
+        strcpy(CATEGORY, async_def_str);
+        start_ptr += strlen(async_def_str);
+    } else if (strncmp(start_ptr, def_str, strlen(def_str)) == 0) {
+        strcpy(CATEGORY, def_str);
+        start_ptr += strlen(def_str);
+    } else if (strncmp(start_ptr, class_str, strlen(class_str)) == 0) {
+        strcpy(CATEGORY, class_str);
+        start_ptr += strlen(class_str);
+    } else {
+        // ignore grepped edge cases like 'print("def class ()")'
+        return;
+    }
+
+    // start_ptr -> "{M whitespaces}NAME(..."
+    // ignore M
+    while (isspace(*start_ptr)) {
+        start_ptr++;
+    }
+
+    // start_ptr -> "NAME(..."
+    // extract NAME
+    char NAME[256];
     ptr = strchr(start_ptr, '(');
     *ptr = '\0';
-    strcpy(object_name, start_ptr);
-    // problems with 'async def'.
-    // e.g. `cgmd.o '.*' -n`.
+    strcpy(NAME, start_ptr);
 
     if (pflag && nflag) {
-        printf("%s:%d %s\n", path, line_number, object_name);
+        printf("%s:%d %s %s\n", PATH, LINE, CATEGORY, NAME);
     } else if (pflag) {
-        printf("%s:%d\n", path, line_number);
+        printf("%s:%d\n", PATH, LINE);
     } else if (nflag) {
-        printf("%s\n", object_name);
+        printf("%s%s\n", CATEGORY, NAME);
     } else {
-
+        printf("%d %s %s\n", INDENTATION, CATEGORY, NAME);
     }
 }
 
