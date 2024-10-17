@@ -199,35 +199,68 @@ main(int argc, char **argv)
         );
     }
 
-    char command[1024];
+    // git grep -l
+    char grep_l[1024];
     snprintf(
-        command,
-        sizeof(command),
+        grep_l,
+        sizeof(grep_l),
+        "git grep -l %s%s -- '*.py'",
+        sensitive,
+        query
+    );
+    FILE *fp = popen(grep_l, "r");
+    if (fp == NULL) {
+        perror("popen failed");
+        return 1;
+    }
+    // Read output a line at a time
+    char buffer[1024];
+    int MAX_LENGTH = 0;
+    // Find longest grepped filename
+    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+        printf("buruburu %s", buffer);
+        if (strlen(buffer) > MAX_LENGTH) {
+            MAX_LENGTH = strlen(buffer);
+        }
+    }
+    // Close the process
+    if (pclose(fp) == -1) {
+        perror("pclose failed");
+        return 1;
+    }
+    // Create an auxilliary line of length MAX_LENGTH + 4 (or 79)
+    int LINE_LENGTH = MAX_LENGTH + 4;
+    if (LINE_LENGTH < 79) {
+        LINE_LENGTH = 79;
+    }
+    char *separator = (char *)malloc((LINE_LENGTH + 2) * sizeof(char));
+    memset(separator, '-', LINE_LENGTH);
+    separator[LINE_LENGTH] = '\n';
+    separator[LINE_LENGTH + 1] = '\0';
+    
+
+    // git grep -n
+
+    char grep_n[1024];
+    snprintf(
+        grep_n,
+        sizeof(grep_n),
         "git grep -n %s%s -- '*.py'",
         sensitive,
         query
     );
 
-    // ----------------------------------
-
-    FILE *fp = popen(command, "r");
+    fp = popen(grep_n, "r");
 
     if (fp == NULL) {
         perror("popen failed");
         return 1;
     }
-
-    // Buffer to hold each line of output
-    char buffer[1024];
-    // Create once auxilliary line
-    char line_79[81];
-    memset(line_79, '-', 79);
-    line_79[79] = '\n';
-    line_79[80] = '\0';
+    
     // Read output a line at a time
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
         // Process the output line (for now, just print it)
-        print_element(pflag, nflag, buffer, line_79);
+        print_element(pflag, nflag, buffer, separator);
     }
 
     // Close the process
@@ -235,6 +268,7 @@ main(int argc, char **argv)
         perror("pclose failed");
         return 1;
     }
-
+    
+    free(separator);
     return 0;
 }
