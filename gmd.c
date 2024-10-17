@@ -69,7 +69,7 @@ void print_element(int pflag, int nflag, const char *buffer) {
     } else if (pflag) {
         printf("%s:%d\n", PATH, LINE);
     } else if (nflag) {
-        printf("%s%s\n", CATEGORY, NAME);
+        printf("%s %s\n", CATEGORY, NAME);
     } else {
         printf("%s:%d %s %s-------------------\n", PATH, LINE, CATEGORY, NAME);
         // open file at PATH
