@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-void print_element(int pflag, int nflag, const char *buffer, const char *sep) {
+void
+print_element(int pflag, int nflag, const char *buffer, const char *sep)
+{
 
     char *start_ptr = strdup(buffer);
     // start_ptr -> "PATH:LINE:{INDENTATION}[def/async def/class]{spaces}NAME(..."
@@ -126,7 +128,9 @@ void print_element(int pflag, int nflag, const char *buffer, const char *sep) {
     }
 }
 
-int main(int argc, char **argv) {
+int
+main(int argc, char **argv)
+{
     int cflag = 0;
     int hflag = 0;
     int fflag = 0;
@@ -206,14 +210,13 @@ int main(int argc, char **argv) {
 
     // ----------------------------------
 
-    
     FILE *fp = popen(command, "r");
-    
+
     if (fp == NULL) {
         perror("popen failed");
         return 1;
     }
-    
+
     // Buffer to hold each line of output
     char buffer[1024];
     // Create once auxilliary line
@@ -226,13 +229,12 @@ int main(int argc, char **argv) {
         // Process the output line (for now, just print it)
         print_element(pflag, nflag, buffer, line_79);
     }
-    
+
     // Close the process
     if (pclose(fp) == -1) {
         perror("pclose failed");
         return 1;
     }
-
 
     return 0;
 }
