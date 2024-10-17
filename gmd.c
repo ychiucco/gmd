@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-void print_element(int pflag, int nflag, const char *buffer) {
+void print_element(int pflag, int nflag, const char *buffer, const char *sep) {
 
     char *start_ptr = strdup(buffer);
     // start_ptr -> "PATH:LINE:{INDENTATION}[def/async def/class]{spaces}NAME(..."
@@ -71,7 +71,7 @@ void print_element(int pflag, int nflag, const char *buffer) {
     } else if (nflag) {
         printf("%s %s\n", CATEGORY, NAME);
     } else {
-        printf("%s:%d %s %s-----------------\n\n", PATH, LINE, CATEGORY, NAME);
+        printf("%s%s:%d\n%s", sep, PATH, LINE, sep);
         // open file at PATH
         FILE* file = fopen(PATH, "r");
         if (file == NULL) {
@@ -107,7 +107,9 @@ void print_element(int pflag, int nflag, const char *buffer) {
                         // do not print empty lines
                         ;
                     }
-                    else if (strncmp(ptr, "):", 2) == 0) {
+                    else if (
+                        strncmp(ptr, "):", 2) == 0 || strncmp(ptr, ") ->", 4) == 0
+                    ) {
                         printf("%s", line);
                     }
                     else {
@@ -214,10 +216,15 @@ int main(int argc, char **argv) {
     
     // Buffer to hold each line of output
     char buffer[1024];
+    // Create once auxilliary line
+    char line_79[81];
+    memset(line_79, '-', 79);
+    line_79[79] = '\n';
+    line_79[80] = '\0';
     // Read output a line at a time
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
         // Process the output line (for now, just print it)
-        print_element(pflag, nflag, buffer);
+        print_element(pflag, nflag, buffer, line_79);
     }
     
     // Close the process
