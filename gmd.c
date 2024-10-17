@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+char __GMD_VERSION__[] = "1.0.0a2";
+
 void
 print_element(int pflag, int nflag, const char *buffer, const char *sep)
 {
@@ -130,7 +132,10 @@ print_element(int pflag, int nflag, const char *buffer, const char *sep)
 
 int
 main(int argc, char **argv)
-{
+{   
+    // Header
+    printf("\nGMD v%s\nRunning on %s\n\n", __GMD_VERSION__, __VERSION__);
+
     int cflag = 0;
     int hflag = 0;
     int fflag = 0;
@@ -218,7 +223,6 @@ main(int argc, char **argv)
     int MAX_LENGTH = 0;
     // Find longest grepped filename
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-        printf("buruburu %s", buffer);
         if (strlen(buffer) > MAX_LENGTH) {
             MAX_LENGTH = strlen(buffer);
         }
@@ -237,10 +241,7 @@ main(int argc, char **argv)
     memset(separator, '-', LINE_LENGTH);
     separator[LINE_LENGTH] = '\n';
     separator[LINE_LENGTH + 1] = '\0';
-    
-
     // git grep -n
-
     char grep_n[1024];
     snprintf(
         grep_n,
