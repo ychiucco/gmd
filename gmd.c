@@ -71,7 +71,7 @@ void print_element(int pflag, int nflag, const char *buffer) {
     } else if (nflag) {
         printf("%s %s\n", CATEGORY, NAME);
     } else {
-        printf("%s:%d %s %s-------------------\n", PATH, LINE, CATEGORY, NAME);
+        printf("%s:%d %s %s-----------------\n\n", PATH, LINE, CATEGORY, NAME);
         // open file at PATH
         FILE* file = fopen(PATH, "r");
         if (file == NULL) {
@@ -120,6 +120,7 @@ void print_element(int pflag, int nflag, const char *buffer) {
 
         // Close the file
         fclose(file);
+        printf("\n\n");
     }
 }
 
