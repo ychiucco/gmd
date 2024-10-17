@@ -7,7 +7,10 @@ Right now the code is tested on `zsh` only.
 ### Installation
 
 ```zsh
-echo "\n" >> ~/.zshrc && curl -s https://raw.githubusercontent.com/ychiucco/gmd/refs/heads/main/gmd.zsh >> ~/.zshrc
+git clone git@github.com:ychiucco/gmd.git \
+cd gmd \
+gcc -o gmd.o gmd.c \
+echo "\nalias gmd=$(pwd)/gmd.o" >> ~/.zshrc
 ```
 
 ### Usage
