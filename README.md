@@ -30,4 +30,4 @@ Options:
     - `-o`, `--open`: Open matching file at the correct line with VSCode (ignore `-p` and/or `-n`)
 
 Positional Arguments:
-- `arg`: The class or function name to search for. Use `.*` in any position as a wildcard to match patterns. Wrap the argument in single quotes (`' '`) when using wildcards.
+- `arg`: The class or function name to search for. Use `.*` in any position as a wildcard to match patterns. Wrap the argument inside quotes (double or single) when using wildcards.
