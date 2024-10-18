@@ -6,7 +6,7 @@
 char __GMD_VERSION__[] = "1.0.0a2";
 
 void
-print_element(int pflag, int nflag, const char *buffer, const char *sep)
+print_element(int pflag, int nflag, int oflag, const char *buffer, const char *sep)
 {
 
     char *start_ptr = strdup(buffer);
@@ -26,6 +26,15 @@ print_element(int pflag, int nflag, const char *buffer, const char *sep)
     strcpy(LINE_str, start_ptr);
     int LINE = atoi(LINE_str);
     start_ptr = ptr + 1;
+
+    if (oflag) {
+        char code_goto[1024];
+        snprintf(
+            code_goto, sizeof(code_goto), "code --goto %s:%d", PATH, LINE
+        );
+        system(code_goto);
+        return;
+    }
 
     // start_ptr -> "{INDENTATION}[def/async def/class]{spaces}NAME(..."
     // extract INDENTATION
@@ -139,6 +148,7 @@ main(int argc, char **argv)
     int sflag = 0;
     int pflag = 0;
     int nflag = 0;
+    int oflag = 0;
     char* search_pattern = NULL;
 
     for (int i = 1; i < argc; i++) {
@@ -164,6 +174,10 @@ main(int argc, char **argv)
             strcmp(argv[i], "-n") == 0 || strcmp(argv[i], "--name") == 0
         ) {
             nflag = 1;
+        } else if (
+            strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--open") == 0
+        ) {
+            oflag = 1;
         } else if (argv[i][0] != '-') {
             search_pattern = argv[i];
         } else {
@@ -258,7 +272,7 @@ main(int argc, char **argv)
     // Read output a line at a time
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
         // Process the output line (for now, just print it)
-        print_element(pflag, nflag, buffer, separator);
+        print_element(pflag, nflag, oflag, buffer, separator);
     }
 
     // Close the process
