@@ -117,7 +117,8 @@ print_element(
                         ;
                     }
                     else if (
-                        strncmp(ptr, "):", 2) == 0 || strncmp(ptr, ") ->", 4) == 0
+                        strncmp(ptr, "):", 2) == 0 ||
+                        strncmp(ptr, ") ->", 4) == 0
                     ) {
                         printf("%s", line);
                     }
