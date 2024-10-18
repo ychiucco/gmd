@@ -132,10 +132,7 @@ print_element(int pflag, int nflag, const char *buffer, const char *sep)
 
 int
 main(int argc, char **argv)
-{   
-    // Header
-    printf("\nGMD v%s\nRunning on %s\n\n", __GMD_VERSION__, __VERSION__);
-
+{
     int cflag = 0;
     int hflag = 0;
     int fflag = 0;
