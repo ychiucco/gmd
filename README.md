@@ -15,16 +15,19 @@ source ~/.${0#-}rc
 ### Usage
 
 ```zsh
-gmd [OPTIONS] [--] 'arg'
+gmd [-c | -f] [-s] [-p] [-n] [-o] 'arg'
 ```
 
 Options:
-- `-h`, `--help`: Show help message
-- `-p`, `--path`: Display the file and line number of the match
-- `-n`, `--name`: Display only the name of the matched object (class/function)
-- `-c`, `--class`: Search for class definitions only (cannot be used with `-f`)
-- `-f`, `--function`: Search for function definitions only (cannot be used with `-c`)
-- `-s`, `--sensitive`: Make the search case-sensitive
+- Query:
+    - `-c`, `--class`: Search for class definitions only (cannot be used with `-f`)
+    - `-f`, `--function`: Search for function definitions only (cannot be used with `-c`)
+    - `-s`, `--sensitive`: Make the search case-sensitive
+    
+- Printing:
+    - `-p`, `--path`: Display the file and line number of the match
+    - `-n`, `--name`: Display only the name of the matched object (class/function)
+    - `-o`, `--open`: Open matching file at the correct line with VSCode (ignore `-p` and/or `-n`)
 
 Positional Arguments:
 - `arg`: The class or function name to search for
