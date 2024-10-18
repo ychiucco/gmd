@@ -6,7 +6,13 @@
 char __GMD_VERSION__[] = "1.0.0a2";
 
 void
-print_element(int pflag, int nflag, int oflag, const char *buffer, const char *sep)
+print_element(
+    const int pflag,
+    const int nflag,
+    const int oflag,
+    const char *buffer,
+    const char *sep
+)
 {
 
     char *start_ptr = strdup(buffer);
