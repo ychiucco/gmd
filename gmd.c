@@ -14,7 +14,6 @@ print_element(
     const char *sep
 )
 {
-
     char *start_ptr = strdup(buffer);
     // start_ptr -> "PATH:LINE:{INDENTATION}[def/async def/class]{spaces}NAME(..."
     // extract PATH
@@ -23,7 +22,6 @@ print_element(
     *ptr = '\0';
     strcpy(PATH, start_ptr);
     start_ptr = ptr + 1;
-
     // start_ptr -> "LINE:{INDENTATION}[def/async def/class]{spaces}NAME(..."
     // extract LINE
     char LINE_str[50];
@@ -32,7 +30,6 @@ print_element(
     strcpy(LINE_str, start_ptr);
     int LINE = atoi(LINE_str);
     start_ptr = ptr + 1;
-
     if (oflag) {
         char code_goto[1024];
         snprintf(
@@ -41,7 +38,6 @@ print_element(
         system(code_goto);
         return;
     }
-
     // start_ptr -> "{INDENTATION}[def/async def/class]{spaces}NAME(..."
     // extract INDENTATION
     int INDENTATION = 0;
@@ -49,7 +45,6 @@ print_element(
         INDENTATION++;
         start_ptr++;
     }
-
     // start_ptr -> "[def/async def/class]{spaces}NAME(..."
     // extract [def/async def/class], i.e. CATEGORY
     char CATEGORY[10];
@@ -69,20 +64,17 @@ print_element(
         // ignore grepped edge cases like 'print("def class ()")'
         return;
     }
-
     // start_ptr -> "{spaces}NAME(..."
     // ignore spaces
     while (isspace(*start_ptr)) {
         start_ptr++;
     }
-
     // start_ptr -> "NAME(..."
     // extract NAME
     char NAME[256];
     ptr = strchr(start_ptr, '(');
     *ptr = '\0';
     strcpy(NAME, start_ptr);
-
     if (pflag && nflag) {
         printf("%s:%d %s %s\n", PATH, LINE, CATEGORY, NAME);
     } else if (pflag) {
@@ -97,13 +89,11 @@ print_element(
             perror("Error opening file");
             exit(1);
         }
-
         // we want INDENTATION+1 white spaces (+1 for '\0')
         int INDENT = INDENTATION + 1;
         char required_spaces[INDENT + 1];
         memset(required_spaces, ' ', INDENT);
         required_spaces[INDENT] = '\0';
-
         //  read file line by line
         int current_line = 1;
         char line[1024];
@@ -138,7 +128,6 @@ print_element(
             }
             current_line++;
         }
-
         // Close the file
         fclose(file);
         printf("\n\n");
@@ -148,6 +137,21 @@ print_element(
 int
 main(int argc, char **argv)
 {
+    // check git exists
+    int git_available = system("git --version > /dev/null 2>&1");
+    if (git_available != 0) {
+        printf("ERROR: git is not available.\n");
+        exit(1);
+    }
+    // check this is a git repo
+    int git_repo = system(
+        "git rev-parse --is-inside-work-tree > /dev/null 2>&1"
+    );
+    if (git_repo != 0) {
+        printf("ERROR: this is not a git repository.\n");
+        exit(1);
+    }
+    // parse flags
     int cflag = 0;
     int hflag = 0;
     int fflag = 0;
@@ -156,7 +160,6 @@ main(int argc, char **argv)
     int nflag = 0;
     int oflag = 0;
     char* search_pattern = NULL;
-
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--class") == 0) {
             cflag = 1;
@@ -191,7 +194,6 @@ main(int argc, char **argv)
             return 1;
         }
     }
-    
     if (cflag && fflag) {
         fprintf(
             stderr,
@@ -199,13 +201,11 @@ main(int argc, char **argv)
         );
         return 1;
     }
-
-    // -s flag
+    // Prepare query
     char sensitive[4] = "";
     if (!sflag) {
         strcpy(sensitive, "-i "); 
     }
-    // -c and -f flags
     char query[256];
     if (cflag) {
         snprintf(query, sizeof(query), "\"class %s(\"", search_pattern);
@@ -220,7 +220,6 @@ main(int argc, char **argv)
             search_pattern
         );
     }
-
     // git grep -l
     char grep_l[1024];
     snprintf(
@@ -235,21 +234,17 @@ main(int argc, char **argv)
         perror("popen failed");
         return 1;
     }
-    // Read output a line at a time
     char buffer[1024];
     int MAX_LENGTH = 0;
-    // Find longest grepped filename
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
         if (strlen(buffer) > MAX_LENGTH) {
             MAX_LENGTH = strlen(buffer);
         }
     }
-    // Close the process
     if (pclose(fp) == -1) {
         perror("pclose failed");
         return 1;
     }
-    // Create an auxilliary line of length MAX_LENGTH + 4 (or 79)
     int LINE_LENGTH = MAX_LENGTH + 4;
     if (LINE_LENGTH < 79) {
         LINE_LENGTH = 79;
@@ -267,26 +262,19 @@ main(int argc, char **argv)
         sensitive,
         query
     );
-
     fp = popen(grep_n, "r");
-
     if (fp == NULL) {
         perror("popen failed");
         return 1;
     }
-    
-    // Read output a line at a time
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-        // Process the output line (for now, just print it)
         print_element(pflag, nflag, oflag, buffer, separator);
     }
-
-    // Close the process
     if (pclose(fp) == -1) {
         perror("pclose failed");
         return 1;
     }
-    
+    // clean up memory
     free(separator);
     return 0;
 }
