@@ -186,6 +186,12 @@ main(int argc, char **argv)
         } else if (
             strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--open") == 0
         ) {
+            // check VSCode exists
+            int vscode_available = system("code --version > /dev/null 2>&1");
+            if (vscode_available != 0) {
+                printf("ERROR: VSCode is not available.\n");
+                exit(1);
+            }
             oflag = 1;
         } else if (argv[i][0] != '-') {
             search_pattern = argv[i];
