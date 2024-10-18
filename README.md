@@ -26,13 +26,8 @@ Options:
 
 - Printing:
     - `-p`, `--path`: Display the file path and line number of the match
-    - `-n`, `--name`: Display the name of the matched object (class/function)
+    - `-n`, `--name`: Display the name of the matched object
     - `-o`, `--open`: Open matching file at the correct line with VSCode (ignore `-p` and/or `-n`)
 
 Positional Arguments:
-- `arg`: The class or function name to search for
-
-<br>
-Default search is case-insensitive.
-
-Use `.*` in any position as a wildcard to match patterns. Wrap the argument in single quotes (`' '`) when using wildcards.
+- `arg`: The class or function name to search for. Use `.*` in any position as a wildcard to match patterns. Wrap the argument in single quotes (`' '`) when using wildcards.
