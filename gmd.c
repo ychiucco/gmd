@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char __GMD_VERSION__[] = "1.0.0a2";
+char __GMD_VERSION__[] = "1.0.0a3";
 
 void
 print_element(
@@ -11,6 +11,7 @@ print_element(
     const int nflag,
     const int oflag,
     const char *buffer,
+    const int max_length,
     const char *sep
 )
 {
@@ -76,11 +77,15 @@ print_element(
     *ptr = '\0';
     strcpy(NAME, start_ptr);
     if (pflag && nflag) {
-        printf("%s:%d %s %s\n", PATH, LINE, CATEGORY, NAME);
+        char path_line[150];
+        sprintf(path_line, "%s:%d", PATH, LINE);
+        printf(
+            "%-*s    %-12s    %s\n", max_length+4, path_line, CATEGORY, NAME
+        );
     } else if (pflag) {
         printf("%s:%d\n", PATH, LINE);
     } else if (nflag) {
-        printf("%s %s\n", CATEGORY, NAME);
+        printf("%-12s    %s\n", CATEGORY, NAME);
     } else {
         printf("%s%s:%d\n%s", sep, PATH, LINE, sep);
         // open file at PATH
@@ -275,7 +280,7 @@ main(int argc, char **argv)
         return 1;
     }
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-        print_element(pflag, nflag, oflag, buffer, separator);
+        print_element(pflag, nflag, oflag, buffer, MAX_LENGTH, separator);
     }
     if (pclose(fp) == -1) {
         perror("pclose failed");
