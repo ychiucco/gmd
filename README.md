@@ -6,8 +6,7 @@ Give Me Definition (`gmd`) is a shell utility that allows you to quickly find an
 
 ```sh
 git clone git@github.com:ychiucco/gmd.git
-cd gmd
-gcc gmd.c -o /usr/local/bin/gmd
+gcc gmd/gmd.c -o /usr/local/bin/gmd
 ```
 
 ### Usage
