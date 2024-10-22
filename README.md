@@ -20,10 +20,10 @@ gmd [-c|-f] [-s] [-p] [-n] [-o] 'arg'
     - `-f`, `--function`: Search for function definitions only (cannot be used with `-c`)
     - `-s`, `--sensitive`: Make the search case-sensitive
 
-- Printing Options:
+- Printing options:
     - `-p`, `--path`: Display the file path and line number of the match
     - `-n`, `--name`: Display the name of the matched object
     - `-o`, `--open`: Open matching file at the correct line with VSCode (ignore `-p` and/or `-n`)
 
-- Positional Arguments:
+- Positional arguments:
     - `arg`: The class or function name to search for. Use `.*` in any position as a wildcard to match patterns. Wrap the argument inside quotes (double or single) when using wildcards.
